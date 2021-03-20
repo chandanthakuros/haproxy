@@ -2,17 +2,31 @@
 # tasks file for haproxy
 - name: haproxy install
   yum:
-            name: haproxy
+            name: 
+                 - haproxy
+                 - firewalld
             state: installed
+
+- name: allowing http over firewall
+  firewalld:
+          service: http
+          permanent: yes
+          state: enabled
+          immediate: true
+
 
 - name: copy web 
   template: 
                src: haproxy.cfg
-               dest: /etc/haparoxy/haproxy.cfg
+               dest: /etc/haproxy/haproxy.cfg
   notify: lb restart
 
 
 - name: start haproxy service
   service:
           name: haproxy
+          state: started
+- name: start firewal service
+  service:
+          name: firewalld
           state: started
